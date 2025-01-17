@@ -26,13 +26,10 @@ class RawTextLoader():
         return files
     
     def load_text(self) -> str:
-
-        print(self.file_list)
         
         combined_text = []
         for filename in self.file_list:
             file_path = os.path.join(self.dataset_path, filename)
-            print(file_path)
             with open(file_path, "r", encoding="utf-8") as f:
                 text = f.read()
                 combined_text.append(text)
