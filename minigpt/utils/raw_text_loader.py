@@ -22,7 +22,8 @@ class RawTextLoader():
         if not os.path.exists(self.dataset_path):
             raise FileNotFoundError(f"The folder '{self.dataset_path}' does not exist.")
         
-        files = [f for f in os.listdir(self.dataset_path) if os.path.isfile(os.path.join(self.dataset_path, f))]
+        files = [f for f in sorted(os.listdir(self.dataset_path)) if os.path.isfile(os.path.join(self.dataset_path, f))]
+        print(f"files: {files}")
         return files
     
     def load_text(self) -> str:
