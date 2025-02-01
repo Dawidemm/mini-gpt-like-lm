@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import lightning as L
+import tiktoken
 from transformer import TransformerBlock
 from layer_norm import LayerNormalization
 
@@ -38,6 +39,8 @@ class MiniGPT(L.LightningModule):
             bias=False
         )
 
+        self.tokenizer = tiktoken.get_encoding("gpt2")
+
     def forward(self, x: torch.Tensor):
         batch_size, sequence_lenght = x.shape
         token_embeddings = self.token_embeddings(x)
@@ -49,6 +52,34 @@ class MiniGPT(L.LightningModule):
         x = self.dropout(x)
         x = self.transformer_blocks(x)
         x = self.layer_norm(x)
-        predictions = self.out_head(x)
+        logits = self.out_head(x)
 
-        return predictions
+        return logits
+    
+    def generate_text(
+            self, 
+            input_text: str,
+            context_size: int,
+            num_tokens_to_generate: int
+    ) -> str:
+
+        encoded_input_text = self.tokenizer.encode(input_text)
+        encoded_input_tensor = torch.tensor(encoded_input_text).unsqueeze(0)
+
+        encoded_output_text = encoded_input_tensor
+
+        for _ in range(num_tokens_to_generate):
+
+            encoded_input_tensor = encoded_input_tensor[:, -context_size:]
+
+            with torch.no_grad():
+                logits = self.forward(encoded_input_tensor)
+
+            logits = logits[:, -1, :]
+            probabilities = torch.softmax(logits, dim=-1)
+            generated_token = torch.argmax(probabilities, dim=-1, keepdim=True)
+            encoded_output_text = torch.cat((encoded_output_text, generated_token), dim=1)
+
+        decoded_text = self.tokenizer.decode(encoded_output_text.squeeze(0).tolist())
+
+        return decoded_text
