@@ -63,7 +63,7 @@ class MiniGPT(L.LightningModule):
             num_tokens_to_generate: int
     ) -> str:
 
-        encoded_input_text = self.tokenizer.encode(input_text)
+        encoded_input_text = self.tokenizer.encode(input_text, allowed_special={"<|endoftext|>"})
         encoded_input_tensor = torch.tensor(encoded_input_text).unsqueeze(0)
 
         encoded_output_text = encoded_input_tensor
