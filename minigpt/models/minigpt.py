@@ -2,19 +2,22 @@ import torch
 import torch.nn as nn
 import lightning as L
 import tiktoken
-from transformer import TransformerBlock
-from layer_norm import LayerNormalization
+from minigpt.models.transformer import TransformerBlock
+from minigpt.models.layer_norm import LayerNormalization
 
-from settings import MiniGPTSettings
+from minigpt.models.settings import MiniGPTSettings
 
 torch.manual_seed(124)
 
 class MiniGPT(L.LightningModule):
     def __init__(
             self,
+            learning_rate: float = 0.001,
             settings = MiniGPTSettings()
     ):
         super().__init__()
+
+        self.learning_rate = learning_rate
 
         self.token_embeddings = nn.Embedding(
             num_embeddings=settings.vocabulary_size,
@@ -55,6 +58,18 @@ class MiniGPT(L.LightningModule):
         logits = self.out_head(x)
 
         return logits
+    
+    def training_step(self, batch):
+        inputs, targets = batch
+        predicted_tokens = self(inputs)
+        loss = torch.nn.functional.cross_entropy(predicted_tokens.flatten(0, 1), targets.flatten())
+        self.log("train loss", loss, prog_bar=True)
+        return loss
+    
+    def configure_optimizers(self):
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
+
+        return optimizer
     
     def generate_text(
             self, 
