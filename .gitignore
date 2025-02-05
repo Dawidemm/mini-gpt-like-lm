@@ -2,3 +2,4 @@ __pycache__
 *.egg-info
 dataset/
 lightning_logs/
+tests/test.py
