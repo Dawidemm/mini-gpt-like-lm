@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
-from multi_head import MultiHeadAttention
-from feed_forward import FeedForward
-from layer_norm import LayerNormalization
+from minigpt.models.multi_head import MultiHeadAttention
+from minigpt.models.feed_forward import FeedForward
+from minigpt.models.layer_norm import LayerNormalization
 
-from settings import MiniGPTSettings
+from minigpt.models.settings import MiniGPTSettings
 
 
 class TransformerBlock(nn.Module):
