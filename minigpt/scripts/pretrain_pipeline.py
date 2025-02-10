@@ -8,7 +8,7 @@ from minigpt.models import MiniGPT, MiniGPTSettings
 torch.manual_seed(42)
 
 
-DEFAULT_DATASET_PATH = "dataset"
+DEFAULT_DATASET_PATH = "dataset/pretrain"
 SETTINGS = MiniGPTSettings()
 
 def pretrain_pipeline():
