@@ -2,7 +2,7 @@ import torch
 import lightning as L
 from torch.utils.data import DataLoader
 
-from minigpt.utils import RawTextLoader, MiniGPTDataset
+from minigpt.utils import RawTextLoader, PretrainDataset
 from minigpt.models import MiniGPT, MiniGPTSettings
 
 torch.manual_seed(42)
@@ -19,7 +19,7 @@ def pretrain_pipeline():
         )
         raw_txt = raw_txt_loader.load_text()
 
-        pretrain_dataset = MiniGPTDataset(
+        pretrain_dataset = PretrainDataset(
             txt=raw_txt,
             max_lenght=SETTINGS.context_length
         )

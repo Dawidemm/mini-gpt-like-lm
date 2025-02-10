@@ -1,15 +1,15 @@
 import pytest
 import torch
 import tiktoken
-from minigpt.utils import MiniGPTDataset
+from minigpt.utils import PretrainDataset
 
 @pytest.fixture
 def sample_text():
-    return "Test sentence for the MiniGPTDataset class."
+    return "Test sentence for the PretrainDataset class."
 
 @pytest.fixture
 def dataset(sample_text):
-    return MiniGPTDataset(txt=sample_text, max_lenght=3, stride=1)
+    return PretrainDataset(txt=sample_text, max_lenght=3, stride=1)
 
 def test_length_of_dataset(dataset):
     expected_len = len(dataset.input_ids)
@@ -28,6 +28,6 @@ def test_getitem_max_lenght(dataset):
 def test_tokenization(dataset):
     input_chunk, target_chunk = dataset[0]
     tokenizer = tiktoken.get_encoding("gpt2")
-    token_ids = tokenizer.encode("Test sentence for the MiniGPTDataset class.", allowed_special={"<|endoftext|>"})
+    token_ids = tokenizer.encode("Test sentence for the PretrainDataset class.", allowed_special={"<|endoftext|>"})
     assert input_chunk.tolist() == token_ids[:3]
     assert target_chunk.tolist() == token_ids[1:4]
