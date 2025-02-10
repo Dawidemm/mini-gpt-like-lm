@@ -3,7 +3,7 @@ import tiktoken
 from torch.utils.data import Dataset
 
 
-class MiniGPTDataset(Dataset):
+class PretrainDataset(Dataset):
     def __init__(
             self,
             txt: str,
