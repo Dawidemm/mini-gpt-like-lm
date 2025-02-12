@@ -3,7 +3,7 @@ import torch
 import tiktoken
 from torch.utils.data import Dataset, DataLoader
 from lightning import LightningDataModule
-from minigpt.utils.utils import format_input_text
+from minigpt.utils.utils import format_input_text, collate_func
 
 from typing import Dict
 
@@ -60,10 +60,25 @@ class FineTuneDatamodule(LightningDataModule):
             self.test_dataset = FineTuneDataset(test_data)
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=self.shuffle)
+        return DataLoader(
+            self.train_dataset,
+            batch_size=self.batch_size, 
+            shuffle=self.shuffle,
+            collate_fn=collate_func
+        )
     
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=self.shuffle)
+        return DataLoader(
+            self.val_dataset,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            collate_fn=collate_func
+        )
     
     def tests_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=self.shuffle)
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            collate_fn=collate_func
+        )
