@@ -50,13 +50,13 @@ class FineTuneDatamodule(LightningDataModule):
 
     def setup(self, stage: str):
         if stage == "fit":
-            train_data = self.dataset[:int(self.dataset_length * 0.8)]
-            val_data = self.dataset[int(self.dataset_length * 0.8):int(self.dataset_length * 0.9)]
+            train_data = self.data[:int(self.data_length * 0.8)]
+            val_data = self.data[int(self.data_length * 0.8):int(self.data_length * 0.9)]
             self.train_dataset = FineTuneDataset(train_data)
             self.val_dataset = FineTuneDataset(val_data)
 
         if stage == "test":
-            test_data = self.dataset[int(self.dataset_length * 0.9):]
+            test_data = self.data[int(self.data_length * 0.9):]
             self.test_dataset = FineTuneDataset(test_data)
 
     def train_dataloader(self):
