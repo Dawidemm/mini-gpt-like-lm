@@ -46,7 +46,7 @@ class FineTuneDatamodule(LightningDataModule):
         with open(dataset_path, "r") as dataset:
             self.data = json.load(dataset)
         
-        self.data_length = len(self.dataset)
+        self.data_length = len(self.data)
 
     def setup(self, stage: str):
         if stage == "fit":
