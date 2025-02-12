@@ -15,7 +15,7 @@ def format_input_text(
 
     input_text = f"\n\n### Input: \n{raw_txt['input']}" if raw_txt['input'] else ""
 
-    response_text = f"\n\n### Response: \n{raw_txt['response']}"
+    response_text = f"\n\n### Response: \n{raw_txt['output']}"
 
     return instruction_text + input_text + response_text
 
