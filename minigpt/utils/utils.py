@@ -29,7 +29,7 @@ def collate_func(
     inputs_list, targets_list = [], []
 
     for item in batch:
-        new_item = item.copy()
+        new_item = list(item).copy()
         new_item += [padding_token_id]
 
         padded = (
