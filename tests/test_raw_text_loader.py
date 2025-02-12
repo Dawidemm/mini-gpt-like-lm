@@ -27,8 +27,6 @@ def test_load_text(mock_dataset_files):
     loader = RawTextLoader(dataset_path=str(mock_dir))
     combined_text = loader.load_text()
     expected_text = f" {loader.special_token} ".join(files.values())
-    print(combined_text)
-    print(expected_text)
     assert combined_text == expected_text
 
 
