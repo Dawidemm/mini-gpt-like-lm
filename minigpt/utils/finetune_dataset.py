@@ -28,7 +28,7 @@ class FineTuneDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, index):
-        return self.encoded_texts[index]
+        return torch.tensor(self.encoded_texts[index])
     
 
 class FineTuneDatamodule(LightningDataModule):
