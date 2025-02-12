@@ -59,11 +59,23 @@ class MiniGPT(L.LightningModule):
 
         return logits
     
-    def training_step(self, batch):
+    def _shared_step(self, batch):
         inputs, targets = batch
         predicted_tokens = self(inputs)
         loss = torch.nn.functional.cross_entropy(predicted_tokens.flatten(0, 1), targets.flatten())
-        self.log("train loss", loss, prog_bar=True)
+
+        return loss
+    
+    def training_step(self, batch):
+        loss = self._shared_step(batch)
+        self.log("train_loss", loss, prog_bar=True)
+
+        return loss
+    
+    def val_step(self, batch):
+        loss = self._shared_step(batch)
+        self.log("val_loss", loss, prog_bar=True)
+        
         return loss
     
     def configure_optimizers(self):
