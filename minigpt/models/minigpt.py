@@ -67,16 +67,16 @@ class MiniGPT(L.LightningModule):
         return loss
     
     def training_step(self, batch):
-        loss = self._shared_step(batch)
-        self.log("train_loss", loss, prog_bar=True)
+        train_loss = self._shared_step(batch)
+        self.log("train_loss", train_loss, prog_bar=True, on_epoch=True, on_step=True)
 
-        return loss
+        return train_loss
     
-    def val_step(self, batch):
-        loss = self._shared_step(batch)
-        self.log("val_loss", loss, prog_bar=True)
+    def validation_step(self, batch):
+        val_loss = self._shared_step(batch)
+        self.log("val_loss", val_loss, prog_bar=True, on_epoch=True, on_step=False)
         
-        return loss
+        return val_loss
     
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
