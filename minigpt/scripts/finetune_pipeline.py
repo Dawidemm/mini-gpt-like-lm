@@ -1,6 +1,8 @@
 import torch
+import mlflow
 import lightning as L
 from lightning.pytorch.callbacks import ModelCheckpoint
+from lightning.pytorch.loggers import MLFlowLogger
 
 from minigpt.utils import FineTuneDatamodule
 from minigpt.models import MiniGPT, MiniGPTSettings
@@ -14,6 +16,17 @@ SETTINGS = MiniGPTSettings()
 def pretrain_pipeline():
     
     try:
+        mlflow_logger = MLFlowLogger(
+            experiment_name="MiniGPT-Finetuning",
+            tracking_uri="mlruns/"
+        )
+
+        mlflow.log_params({
+            "batch_size": 1,
+            "num_layers": SETTINGS.num_layers,
+            "embedding_dim": SETTINGS.embeddings_dim
+        })
+
         datamodule = FineTuneDatamodule(
             dataset_path=DEFAULT_DATASET_PATH,
             batch_size=1
@@ -34,9 +47,9 @@ def pretrain_pipeline():
         )
 
         trainer = L.Trainer(
-            max_epochs=5,
+            max_epochs=3,
             accelerator="auto",
-            logger=True,
+            logger=mlflow_logger,
             callbacks=[checkpoint_callback]
         )
 
