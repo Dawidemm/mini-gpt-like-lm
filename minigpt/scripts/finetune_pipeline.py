@@ -1,5 +1,6 @@
 import torch
 import lightning as L
+from lightning.pytorch.callbacks import ModelCheckpoint
 
 from minigpt.utils import FineTuneDatamodule
 from minigpt.models import MiniGPT, MiniGPTSettings
@@ -18,6 +19,15 @@ def pretrain_pipeline():
             batch_size=1
         )
 
+        checkpoint_callback = ModelCheckpoint(
+            dirpath="checkpoints/",
+            filename="best_model",
+            monitor="val_loss",
+            mode="min",
+            save_top_k=1,
+            verbose=True
+        )
+
         minigpt = MiniGPT.load_from_checkpoint(
             checkpoint_path="lightning_logs/version_2/checkpoints/epoch=4-step=3060.ckpt",
             map_location="cpu"
@@ -26,7 +36,8 @@ def pretrain_pipeline():
         trainer = L.Trainer(
             max_epochs=5,
             accelerator="auto",
-            logger=True
+            logger=True,
+            callbacks=[checkpoint_callback]
         )
 
         trainer.fit(
