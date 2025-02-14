@@ -81,13 +81,14 @@ def test_finetune_datamodule_setup(sample_dataset_file):
     assert isinstance(data_module.val_dataloader(), torch.utils.data.DataLoader)
 
 
-
-def test_test_dataloader(sample_dataset_file):
+def test_finetune_datamodule_dataloaders_output_type(sample_dataset_file):
     data_module = FineTuneDatamodule(dataset_path=str(sample_dataset_file), batch_size=1)
-    data_module.setup("test")
-    test_loader = data_module.tests_dataloader()
+    data_module.setup("fit")
 
-    batch = next(iter(test_loader))
+    train_batch_inputs, train_batch_targets = next(iter(data_module.train_dataloader()))
+    val_batch_inputs, val_batch_targets = next(iter(data_module.val_dataloader()))
 
-    assert isinstance(batch, torch.Tensor)
-    assert batch.size(0) == data_module.batch_size
+    assert isinstance(train_batch_inputs, torch.Tensor)
+    assert isinstance(train_batch_targets, torch.Tensor)
+    assert isinstance(val_batch_inputs, torch.Tensor)
+    assert isinstance(val_batch_targets, torch.Tensor)
