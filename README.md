@@ -1,5 +1,7 @@
 # mini-gpt-like-lm
 
+[![CI](https://github.com/Dawidemm/mini-gpt-like-lm/actions/workflows/ci.yaml/badge.svg)](https://github.com/Dawidemm/mini-gpt-like-lm/actions/workflows/ci.yaml)
+
 ## Description
 
 This project aims to build a small-scale language model inspired by GPT-2 architecture and optimized for minimal computational resources and data usage. The goal is to understand the core principles of transformer-based models while exploring strategies to reduce the computational footprint and data requirements typically associated with training large-scale language models.
