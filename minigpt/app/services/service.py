@@ -5,5 +5,5 @@ model = MiniGPT.load_from_checkpoint(
     map_location="cpu"
 )
 
-def generate_text(prompt: str, max_length: int) -> str:
-    return model.generate_text(input_text=prompt, context_size=256, num_tokens_to_generate=max_length)
+def generate(prompt: str, max_length: int) -> str:
+    return model.generate(prompt=prompt)
