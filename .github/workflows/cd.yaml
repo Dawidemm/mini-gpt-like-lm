@@ -1,0 +1,21 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_to_dockerhub:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build . -t dawidem/mini-gpt-like-lm-app:lastest
+
+      - name: Push Docker image
+        run: |
+          docker login -u dawidem -p ${{secrets.DOCKERHUB_TOKEN}}
+          docker push dawidem/mini-gpt-like-lm-app:lastest
