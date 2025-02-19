@@ -5,19 +5,12 @@ from typing import Dict, Tuple, List, Union
 
 def format_input_text(
         raw_txt: Dict
-    ):
+    ) -> str:
 
-    instruction_text = (
-        f"Below in an instruction that describes a task."
-        f"Write a response that appropriately completes the request. "
-        f"\n\n### Instruction: \n{raw_txt['instruction']}"
-    )
+    instruction_text = raw_txt['instruction']
+    response_text = raw_txt['output']
 
-    input_text = f"\n\n### Input: \n{raw_txt['input']}" if raw_txt['input'] else ""
-
-    response_text = f"\n\n### Response: \n{raw_txt['output']}"
-
-    return instruction_text + input_text + response_text
+    return instruction_text + response_text
 
 def collate_func(
         batch: List[Union[List[int], torch.Tensor]],
