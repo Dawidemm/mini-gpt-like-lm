@@ -32,7 +32,7 @@ include = ["minigpt"]
 exclude = ["tests"]
 
 [project.scripts]
-pretrain = "minigpt.scripts.pretrain_pipeline:pretrain_pipeline"
+minigpt = "minigpt.app.main:run_app"
 
 [tool.black]
 line-length = 88
