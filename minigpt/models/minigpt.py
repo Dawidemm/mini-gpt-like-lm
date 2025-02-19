@@ -83,30 +83,43 @@ class MiniGPT(L.LightningModule):
 
         return optimizer
     
-    def generate_text(
-            self, 
-            input_text: str,
-            context_size: int,
-            num_tokens_to_generate: int
-    ) -> str:
+    def generate(
+            self,
+            prompt: str,
+            max_new_tokens: int = 100,
+            context_size: int = 256, 
+            temperature: float = 0.0,
+            top_k: int = 3,
+            eos_id=50256
+        ):
 
-        encoded_input_text = self.tokenizer.encode(input_text, allowed_special={"<|endoftext|>"})
-        encoded_input_tensor = torch.tensor(encoded_input_text).unsqueeze(0)
+        token_ids = prompt
+        token_ids = torch.tensor(self.tokenizer.encode(token_ids), dtype=torch.long).unsqueeze(0)
 
-        encoded_output_text = encoded_input_tensor
-
-        for _ in range(num_tokens_to_generate):
-
-            encoded_input_tensor = encoded_input_tensor[:, -context_size:]
-
+        for _ in range(max_new_tokens):
+            token_ids_cond = token_ids[:, -context_size:]
             with torch.no_grad():
-                logits = self.forward(encoded_input_tensor)
-
+                logits = self(token_ids_cond)
             logits = logits[:, -1, :]
-            probabilities = torch.softmax(logits, dim=-1)
-            generated_token = torch.argmax(probabilities, dim=-1, keepdim=True)
-            encoded_output_text = torch.cat((encoded_output_text, generated_token), dim=1)
 
-        decoded_text = self.tokenizer.decode(encoded_output_text.squeeze(0).tolist())
+            if top_k is not None:
+                top_logits, _ = torch.topk(logits, top_k)
+                min_val = top_logits[:, -1]
+                logits = torch.where(logits < min_val, torch.tensor(float("-inf")), logits)
 
-        return decoded_text
+            if temperature > 0.0:
+                logits = logits / temperature
+                probs = torch.softmax(logits, dim=-1)
+                token_ids_next = torch.multinomial(probs, num_samples=1)
+            else:
+                token_ids_next = torch.argmax(logits, dim=-1, keepdim=True)
+
+            if eos_id is not None and torch.any(token_ids_next == eos_id):
+                break
+
+            token_ids = torch.cat((token_ids, token_ids_next), dim=1)
+
+        generated_text = self.tokenizer.decode(token_ids.squeeze().tolist())
+        generated_text = generated_text[len(prompt):].strip()
+
+        return generated_text
