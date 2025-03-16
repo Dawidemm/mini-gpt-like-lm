@@ -1,0 +1,9 @@
+Dockerfile
+.*
+*.egg-info
+README.md
+LICENSE
+minigpt/scripts/
+dataset/
+tests/
+lightning_logs/

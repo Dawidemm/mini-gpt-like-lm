@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mini-gpt-like-lm"
+version = "0.0.1"
+description = "A lightweight GPT-2-inspired mini language model project."
+license = { file = "LICENSE" }
+authors = [
+    { name = "Dawid Mazur", email = "dawid.mazur@icloud.com" },
+]
+dependencies = [
+    "numpy==2.2.1",
+    "torch==2.5.0",
+    "lightning==2.5.0",
+    "mlflow==2.20.1",
+    "tiktoken==0.8.0",
+    "pytest==8.3.4",
+    "fastapi==0.115.8",
+    "uvicorn==0.34.0",
+    "streamlit==1.42.0",
+    "requests==2.32.3"
+]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[tool.setuptools.packages.find]
+include = ["minigpt"]
+exclude = ["tests"]
+
+[project.scripts]
+minigpt = "minigpt.app.main:run_app"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+skip-string-normalization = true

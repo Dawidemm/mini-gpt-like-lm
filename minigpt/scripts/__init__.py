@@ -1,0 +1,1 @@
+from minigpt.scripts.pretrain_pipeline import pretrain_pipeline
